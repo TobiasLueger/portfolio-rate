@@ -5,8 +5,8 @@ import Header from '@/components/header'
 import { Toaster } from '@/components/ui/toaster'
 
 export const metadata = {
-  title: 'PortfolioPlus',
-  description: 'Showcase of top portfolio websites',
+  title: 'PortfolioRate',
+  description: 'A showcase and rating of top portfolio websites.',
 }
 
 export default function RootLayout({

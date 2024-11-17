@@ -3,15 +3,17 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Star, ExternalLink } from "lucide-react";
-import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { portfolios } from "@/constants/portfolio";
 import Stage from "@/components/stage";
+import { ImageWithFallback } from "@/components/imagewithfallback";
+
+const DEFAULT_IMAGE = "/images/default.png"; // Pfad zum Standardbild
 
 export default function Home() {
   const [search, setSearch] = useState("");
   const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
-  const [showTopPicks, setShowTopPicks] = useState(false); // New state for Top Pick filter
+  const [showTopPicks, setShowTopPicks] = useState(false);
 
   const toggleRating = (rating: number) => {
     setSelectedRatings((prev) =>
@@ -27,20 +29,17 @@ export default function Home() {
       selectedRatings.length > 0
         ? selectedRatings.includes(Math.floor(portfolio.rating))
         : true;
-    const matchesTopPick = showTopPicks ? portfolio.recommended : true; // Filter by Top Pick if enabled
+    const matchesTopPick = showTopPicks ? portfolio.recommended : true;
 
     return matchesName && matchesRating && matchesTopPick;
   });
 
   return (
     <div className="px-4">
-      {/* Stage Section */}
       <Stage search={search} setSearch={setSearch} />
 
-      {/* Portfolio Filters */}
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          {/* Star Rating Filter */}
           <div className="flex gap-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
@@ -56,17 +55,14 @@ export default function Home() {
               </button>
             ))}
           </div>
-
-          {/* Top Pick Filter */}
           <button
             onClick={() => setShowTopPicks(!showTopPicks)}
-            className={`px-4 py-2 text-sm rounded-full transition-all bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-500 hover:to-pink-500 shadow-md cursor-pointer`}
+            className="px-4 py-2 text-sm rounded-full transition-all bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-500 hover:to-pink-500 shadow-md cursor-pointer"
           >
             {showTopPicks ? "Show All" : "Top Picks"}
           </button>
         </div>
 
-        {/* Portfolio Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredPortfolios.map((portfolio) => (
             <Card
@@ -74,10 +70,10 @@ export default function Home() {
               className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1a1a1a] shadow-md"
             >
               <div className="relative aspect-[4/3]">
-                <Image
+                <ImageWithFallback
                   src={portfolio.image}
+                  fallbackSrc={DEFAULT_IMAGE}
                   alt={portfolio.title}
-                  fill
                   className="object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-100 filter brightness-50"
                 />
                 <div className="absolute top-4 left-4">
@@ -98,7 +94,6 @@ export default function Home() {
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-4 bg-gray-100 dark:bg-[#1a1a1a]">
                 <div className="flex justify-between items-center">
-                  {/* Star Rating */}
                   <div className="flex">
                     {[1, 2, 3, 4, 5].map((star) => {
                       const isFull = star <= Math.floor(portfolio.rating);
@@ -128,12 +123,11 @@ export default function Home() {
                       {portfolio.rating.toFixed(1)}
                     </span>
                   </div>
-                  {/* Visit Site */}
                   <a
                     href={portfolio.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
+                    className="text-sm font-medium text-yellow-400 hover:underline"
                   >
                     Visit Site
                     <ExternalLink className="w-4 h-4 ml-2 inline" />
